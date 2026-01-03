@@ -4,27 +4,21 @@ config {
   name: "purchase_traffic_source_medium",
   tags: ["End-to-End", "purchase_traffic_source_medium"]
 }
-
 SELECT
   PARSE_DATE('%Y%m%d', event_date) AS event_date,
   traffic_source.medium AS traffic_source_medium,
   user_pseudo_id,
-
   -- Extract session id from event_params
   (
     SELECT value.int_value
     FROM UNNEST(event_params)
     WHERE key = 'ga_session_id'
   ) AS ga_session_id,
-
   event_value_in_usd,
-
   -- REQUIRED for Gold KPIs
   ecommerce.total_item_quantity AS total_item_quantity,
   ecommerce.transaction_id
-
 FROM ${ref("events")}
-
 WHERE event_name = 'purchase'
   AND traffic_source.medium IS NOT NULL
   AND traffic_source.medium != '(data deleted)'

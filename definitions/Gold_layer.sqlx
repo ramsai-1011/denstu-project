@@ -8,28 +8,21 @@ config {
 SELECT
   DATE_TRUNC(event_date, MONTH) AS purchase_month,
   traffic_source_medium,
-
   -- KPI 1: Purchased value in USD
   SUM(event_value_in_usd) AS total_purchased_value_usd,
-
   -- KPI 2: Total number of purchased items
   SUM(total_item_quantity) AS total_purchased_items,
-
   -- Number of purchases
   COUNT(DISTINCT transaction_id) AS total_purchases,
-
   -- KPI 3: Avg items per purchase
   SAFE_DIVIDE(
     SUM(total_item_quantity),
     COUNT(DISTINCT transaction_id)
   ) AS avg_items_per_purchase
-
 FROM ${ref("purchase_traffic_source_medium")}
-
 GROUP BY
   purchase_month,
   traffic_source_medium
-
 ORDER BY
   purchase_month,
   total_purchased_value_usd DESC
