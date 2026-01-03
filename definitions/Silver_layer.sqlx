@@ -1,7 +1,8 @@
 config {
   type: "table",
   schema: "Silver_layer",
-  name: "purchase_traffic_source_medium"
+  name: "purchase_traffic_source_medium",
+  tags: ["End-to-End", "purchase_traffic_source_medium"]
 }
 
 SELECT
@@ -16,7 +17,11 @@ SELECT
     WHERE key = 'ga_session_id'
   ) AS ga_session_id,
 
-  event_value_in_usd
+  event_value_in_usd,
+
+  -- REQUIRED for Gold KPIs
+  ecommerce.total_item_quantity AS total_item_quantity,
+  ecommerce.transaction_id
 
 FROM ${ref("events")}
 
